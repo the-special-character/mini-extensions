@@ -1,58 +1,76 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React from "react";
+import { connect } from "react-redux";
+import { AppState } from "./core/reducers";
+import { Dispatch } from "@reduxjs/toolkit";
+import * as actionTypes from "./core/actionTypes/classesActionTypes";
+import StudentForm, { StudentFormType } from "./container/classes/studentForm";
+import ClassInfo from "./container/classes/classInfo";
+import { FormikHelpers } from "formik";
+import {
+  getClasses,
+  resetClasses,
+} from "./core/actionCreators/classesActionCreators";
 
-function App() {
+export interface AppProps {
+  classes: AirTableResponseObj<ClassInfo>[];
+  isLoading: boolean;
+  error: string | Error | null;
+  onSearch(
+    values: StudentFormType,
+    formikHelpers: FormikHelpers<StudentFormType>
+  ): void;
+  onReset(): void;
+}
+
+function App({ classes, onSearch, onReset }: AppProps) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <div
+      style={{
+        height: "100vh",
+      }}
+    >
+      {classes.length > 0 && <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        margin: '1rem'
+      }}>
+        <button onClick={onReset}>Logout</button>
+      </div>}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: '100%',
+          overflow: "auto"
+        }}
+      >
+        {classes.length > 0 ? (
+          <ClassInfo classes={classes} />
+        ) : (
+          <StudentForm onSearch={onSearch} />
+        )}
+      </div>
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state: AppState) => ({
+  classes: state.classes,
+  isLoading: state.isLoading[actionTypes.GET_CLASSES],
+  error: state.error[actionTypes.GET_CLASSES],
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<actionTypes.ClassesAction>) => ({
+  onSearch: (
+    values: StudentFormType,
+    formikHelpers: FormikHelpers<StudentFormType>
+  ) => {
+    formikHelpers.setSubmitting(true);
+    dispatch(getClasses(values, formikHelpers));
+  },
+  onReset: () => dispatch(resetClasses()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
