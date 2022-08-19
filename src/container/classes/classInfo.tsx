@@ -5,6 +5,7 @@ import ClassDetails from "../../components/ClassDetails";
 const ClassInfo = ({ classes }: Pick<AppProps, 'classes'>) => {
   return (
     <div
+      data-testid="class-info"
       style={{
         display: "flex",
         flexDirection: "column",

@@ -22,7 +22,7 @@ const FormikInput = ({
     >
       <label htmlFor={id}>{`${label}: `}</label>
       <div>
-        <input type="text" id={id} {...field} {...props} />
+        <input data-testid={`txt_${field.name}`} type="text" id={id} {...field} {...props} />
         {touched[field.name] && errors[field.name] && (
           <div
             style={{

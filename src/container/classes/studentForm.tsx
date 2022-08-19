@@ -17,7 +17,9 @@ const StudentForm = ({ onSearch }: Pick<AppProps, 'onSearch'>) => {
     >
       {({ isValid, isSubmitting, dirty }) => {
         return (
-          <Form style={{
+          <Form
+            data-testid="student-form"
+           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'

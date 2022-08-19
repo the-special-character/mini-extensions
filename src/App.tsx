@@ -29,27 +29,32 @@ function App({ classes, onSearch, onReset }: AppProps) {
         height: "100vh",
       }}
     >
-      {classes.length > 0 && <div style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        margin: '1rem'
-      }}>
-        <button onClick={onReset}>Logout</button>
-      </div>}
+      {classes.length > 0 && (
+        <div
+          data-testid="logout"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            margin: "1rem",
+          }}
+        >
+          <button onClick={onReset}>Logout</button>
+        </div>
+      )}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          height: '100%',
-          overflow: "auto"
+          height: "100%",
+          overflow: "auto",
         }}
       >
         {classes.length > 0 ? (
-          <ClassInfo classes={classes} />
+          <ClassInfo data-testid="classInfo" classes={classes} />
         ) : (
-          <StudentForm onSearch={onSearch} />
+          <StudentForm data-testid="studentForm" onSearch={onSearch} />
         )}
       </div>
     </div>
